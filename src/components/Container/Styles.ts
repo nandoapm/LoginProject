@@ -7,6 +7,7 @@ const AppContainer = styled.div`
 	height: 100vh;
 	padding: 0.75rem; /* 12px */
 	box-sizing: border-box;
+	background-color: #d3d3d3;
 `;
 
 const ContentWrapper = styled.div`

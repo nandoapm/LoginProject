@@ -1,12 +1,10 @@
-//import { Login } from "./pages/Login/Login";
 import { Container } from "./components/Container/Container";
-import { CreateAccount } from "./pages/CreateAccount/CreateAccount";
+import { Router } from "./routes/router";
 
 function App() {
 	return (
 		<Container>
-			{/* <Login /> */}
-			<CreateAccount />
+			<Router />
 		</Container>
 	);
 }

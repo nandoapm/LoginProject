@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const LoginSection = styled.section`
+const SectionWrapper = styled.section`
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -20,4 +20,4 @@ const LoginSection = styled.section`
 	}
 `;
 
-export { LoginSection };
+export { SectionWrapper };
