@@ -1,13 +1,12 @@
-import { MouseEvent } from "react";
 import { StyledButton } from "./Styles";
 
 type ButtonProps = {
 	title: string;
-	onClick?: (event: MouseEvent<HTMLButtonElement>, title: string) => void;
+	type: "submit" | "button" | "reset";
 };
 
-function Button({ title, onClick }: ButtonProps) {
-	return <StyledButton onClick={(event) => onClick?.(event, title)}>{title}</StyledButton>;
+function Button({ title, type }: ButtonProps) {
+	return <StyledButton type={type}>{title}</StyledButton>;
 }
 
 export { Button };

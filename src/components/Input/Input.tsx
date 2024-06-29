@@ -5,19 +5,21 @@ import eye from "../../assets/icons/eye.svg";
 
 type InputProps = {
 	placeholder: string;
+	name: string;
 	title: string;
 	icon: string;
 	isPassword?: boolean;
+	value: string;
 	onChange: (event: ChangeEvent<HTMLInputElement>) => void;
 };
 
-function Input({ placeholder, title, icon, isPassword = false, onChange }: InputProps) {
+function Input({ placeholder, name, title, icon, isPassword = false, value, onChange }: InputProps) {
 	return (
 		<InputComponent>
 			<img src={icon} alt={title} />
 			<BoxForm>
 				<label>{title}</label>
-				<input placeholder={placeholder} onChange={onChange} />
+				<input name={name} placeholder={placeholder} value={value} onChange={onChange} />
 			</BoxForm>
 			<button
 				style={{

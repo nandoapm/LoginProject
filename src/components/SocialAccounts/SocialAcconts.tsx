@@ -3,10 +3,12 @@ import google from "../../assets/icons/google.svg";
 import facebook from "../../assets/icons/facebook.svg";
 import apple from "../../assets/icons/apple.svg";
 import twitter from "../../assets/icons/twitter.svg";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { LoginContext } from "../../context/LoginContext";
 
 function SocialAcconts() {
-	const location = useLocation();
+	const { isCreateAccount, changeCreateAccount } = useContext(LoginContext);
 
 	const icons = [
 		{
@@ -40,15 +42,11 @@ function SocialAcconts() {
 			</GroupButton>
 
 			<h5>
-				{location.pathname === "/login" ? (
-					<>
-						`Don’t have an account?`<Link to="/create-account">Create Now</Link>
-					</>
-				) : (
-					<>
-						Already have an account? <Link to="/login">Login Now</Link>
-					</>
-				)}
+				{isCreateAccount ? "Already have an account?" : "Don’t have an account?"}
+				&nbsp;
+				<Link to="#" onClick={changeCreateAccount}>
+					{isCreateAccount ? "Login Now" : "Create Now"}
+				</Link>
 			</h5>
 		</SocialAccountSection>
 	);
