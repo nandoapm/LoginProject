@@ -20,4 +20,13 @@ const SectionWrapper = styled.section`
 	}
 `;
 
-export { SectionWrapper };
+const Error = styled.span`
+	width: 100%;
+	display: flex;
+	align-items: flex-start;
+	justify-content: flex-start;
+	color: red;
+	font-size: 0.75rem; /* 12px */
+`;
+
+export { SectionWrapper, Error };

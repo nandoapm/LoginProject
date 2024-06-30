@@ -1,16 +1,15 @@
 import { useContext } from "react";
 import { LoginContext } from "../../context/LoginContext";
 import { Button } from "../../components/Button/Button";
+import { Error, SectionWrapper } from "./Styles";
 import { Input } from "../../components/Input/Input";
 
 import Email from "../../assets/icons/email.svg";
 import Lock from "../../assets/icons/lock.svg";
 import Mobile from "../../assets/icons/mobile.svg";
 
-import { SectionWrapper } from "./Styles";
-
 function Login() {
-	const { isCreateAccount, currentUser, handleSubmit, handleChange } = useContext(LoginContext);
+	const { isCreateAccount, submitForm, register, handleSubmit, errors } = useContext(LoginContext);
 
 	return (
 		<SectionWrapper>
@@ -32,35 +31,39 @@ function Login() {
 				</>
 			)}
 
-			<form onSubmit={handleSubmit}>
+			<form onSubmit={handleSubmit(submitForm)}>
 				<Input
-					name="emailAddress"
-					value={currentUser.emailAddress}
 					title="Email Address"
 					placeholder="Your email address"
 					icon={Email}
-					onChange={handleChange}
+					currentRegister="emailAddress"
+					register={register}
 				/>
+				{errors && <Error>{errors.emailAddress?.message}</Error>}
+
 				{isCreateAccount && (
-					<Input
-						name="phoneNumber"
-						title="Mobile Number"
-						placeholder="Your mobile number"
-						icon={Mobile}
-						value={currentUser.phoneNumber!}
-						onChange={handleChange}
-					/>
+					<>
+						<Input
+							title="Mobile Number"
+							placeholder="Your mobile number"
+							icon={Mobile}
+							currentRegister="phoneNumber"
+							register={register}
+						/>
+						{errors && <Error>{errors.phoneNumber?.message}</Error>}
+					</>
 				)}
 
 				<Input
-					name="password"
-					value={currentUser.password}
 					title="Password"
 					placeholder="Enter your password"
 					icon={Lock}
 					isPassword={true}
-					onChange={handleChange}
+					currentRegister="password"
+					register={register}
 				/>
+				{errors && <Error>{errors.password?.message}</Error>}
+
 				<Button title="Login" type="submit" />
 			</form>
 			{!isCreateAccount && <a href="#">Forgot Password</a>}

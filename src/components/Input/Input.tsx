@@ -1,27 +1,40 @@
-import { ChangeEvent } from "react";
+import { MouseEvent, useState } from "react";
 import { BoxForm, InputComponent } from "./Styles";
 
-import eye from "../../assets/icons/eye.svg";
+import Eye from "../../assets/icons/eye.svg";
+import HideEye from "../../assets/icons/hide-eye.svg";
+import { UseFormRegister } from "react-hook-form";
 
 type InputProps = {
 	placeholder: string;
-	name: string;
+	currentRegister: string;
 	title: string;
 	icon: string;
 	isPassword?: boolean;
-	value: string;
-	onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+	register: UseFormRegister<any>;
 };
 
-function Input({ placeholder, name, title, icon, isPassword = false, value, onChange }: InputProps) {
+function Input({ placeholder, currentRegister, title, icon, isPassword = false, register }: InputProps) {
+	const [isShowing, setIsShowing] = useState<boolean>(false);
+
+	const showPassword = (event: MouseEvent<HTMLButtonElement>) => {
+		event.preventDefault();
+		setIsShowing(!isShowing);
+	};
+
 	return (
 		<InputComponent>
 			<img src={icon} alt={title} />
 			<BoxForm>
 				<label>{title}</label>
-				<input name={name} placeholder={placeholder} value={value} onChange={onChange} />
+				<input
+					{...register(currentRegister)}
+					placeholder={placeholder}
+					type={isPassword && !isShowing ? "password" : "text"}
+				/>
 			</BoxForm>
 			<button
+				onClick={showPassword}
 				style={{
 					width: "30px",
 					height: "30px",
@@ -29,9 +42,10 @@ function Input({ placeholder, name, title, icon, isPassword = false, value, onCh
 					backgroundColor: "transparent",
 					border: "none",
 					cursor: "pointer",
+					outline: "none",
 				}}
 			>
-				{isPassword && <img src={eye} alt="show-password" />}
+				{isPassword && <img src={isShowing ? Eye : HideEye} alt="show-password" />}
 			</button>
 		</InputComponent>
 	);

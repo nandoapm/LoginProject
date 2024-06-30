@@ -1,41 +1,33 @@
-import {
-	ChangeEvent,
-	createContext,
-	FormEvent,
-	ReactNode,
-	useCallback,
-	useEffect,
-	useMemo,
-	useState,
-} from "react";
+import { createContext, ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
+import { LoginContextProps } from "../types/LoginContext";
+import { UserProps } from "../types/User";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { object, string, number } from "yup";
 
 import "react-toastify/dist/ReactToastify.css";
 
-type LoginContextProps = {
-	isCreateAccount: boolean;
-	currentUser: UserProps;
-	changeCreateAccount: () => void;
-	handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
-	handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
-};
-
-type UserProps = {
-	phoneNumber?: string;
-	password: string;
-	emailAddress: string;
-};
-
 const LoginContext = createContext<LoginContextProps>({} as LoginContextProps);
 
+const schema = object({
+	emailAddress: string().required("Campo obrigatório").email("Email inválido").max(25),
+	phoneNumber: number().positive(),
+	password: string()
+		.required("Campo obrigatório")
+		.min(3, "A senha precisa ter no mínimo 6 caracteres")
+		.max(10, "A senha precisa ter no máximo 10 caracteres"),
+});
+
 const LoginProvider = ({ children }: { children: ReactNode }) => {
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm({ resolver: yupResolver(schema) });
+
 	const [isCreateAccount, setIsCreateAccount] = useState<boolean>(false);
 	const [users, setUsers] = useState<UserProps[]>([]);
-	const [currentUser, setCurrentUser] = useState<UserProps>({
-		phoneNumber: "",
-		password: "",
-		emailAddress: "",
-	});
 
 	useEffect(() => {
 		setIsCreateAccount(false);
@@ -51,39 +43,27 @@ const LoginProvider = ({ children }: { children: ReactNode }) => {
 		setIsCreateAccount(!isCreateAccount);
 	}, [isCreateAccount]);
 
-	const handleChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-		const { name, value } = event.target;
-
-		setCurrentUser((prevState) => ({
-			...prevState,
-			[name]: value,
-		}));
-	}, []);
-
-	const handleSubmit = useCallback(
-		(event: FormEvent<HTMLFormElement>) => {
-			event.preventDefault();
-
-			if (!currentUser.emailAddress || !currentUser.password) {
+	const submitForm = useCallback(
+		(data: UserProps) => {
+			if (!data.emailAddress || !data.password) {
 				toast.error("Por favor, preencha todos os campos obrigatórios.");
 
 				return;
 			}
 
-			const emailAlreadyExists = users.some((user) => user.emailAddress === currentUser.emailAddress);
+			const emailAlreadyExists = users.some((user) => user.emailAddress === data.emailAddress);
 
 			if (emailAlreadyExists) {
-				const correctPassword = users.some((user) => user.password === currentUser.password);
+				const correctPassword = users.some((user) => user.password === data.password);
 
 				if (correctPassword) {
 					toast.success("Informações confirmadas");
-					setCurrentUser({ emailAddress: "", phoneNumber: "", password: "" });
 				} else {
 					toast.error("Informações inválidas");
 				}
 			} else {
-				if (isCreateAccount && currentUser.phoneNumber) {
-					users.push(currentUser);
+				if (isCreateAccount && data.phoneNumber) {
+					users.push(data);
 
 					localStorage.setItem("users", JSON.stringify(users));
 
@@ -91,24 +71,25 @@ const LoginProvider = ({ children }: { children: ReactNode }) => {
 
 					toast.success("Usuário cadastrado com sucesso!");
 
-					setCurrentUser({ emailAddress: "", phoneNumber: "", password: "" });
 					return;
 				}
 				toast.error("Email não cadastro. Por favor criar uma conta");
 			}
 		},
-		[isCreateAccount, currentUser, users]
+		[isCreateAccount, users]
 	);
 
 	const contextValue = useMemo(
 		() => ({
 			isCreateAccount,
-			currentUser,
 			changeCreateAccount,
-			handleChange,
+			submitForm,
+			//Hook Forms
+			register,
 			handleSubmit,
+			errors,
 		}),
-		[isCreateAccount, currentUser, changeCreateAccount, handleChange, handleSubmit]
+		[isCreateAccount, changeCreateAccount, submitForm, register, handleSubmit, errors]
 	);
 
 	return <LoginContext.Provider value={contextValue}>{children}</LoginContext.Provider>;
