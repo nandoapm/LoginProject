@@ -8,6 +8,11 @@ const AppContainer = styled.div`
 	padding: 0.75rem; /* 12px */
 	box-sizing: border-box;
 	background-color: #d3d3d3;
+
+	@media (max-width: 600px) {
+		padding-top: 1.5rem; /* 24px */
+		padding-bottom: 1.5rem; /* 24px */
+	}
 `;
 
 const ContentWrapper = styled.div`
@@ -15,7 +20,7 @@ const ContentWrapper = styled.div`
 	flex-direction: column;
 	border-radius: 0.25rem; /* 4px */
 	box-shadow: 0 0 0.75rem rgba(0, 0, 0, 0.1); /* 0 0 12px */
-	min-width: 18.75rem; /* 300px  (300 / 16 = 18.75)*/
+	min-width: 18.75rem; /* 300px  (300 / 16 = 18.75) */
 	max-width: 25rem; /* 400px (400 / 16 = 25) */
 	width: 100%;
 	background-color: #ffffff;

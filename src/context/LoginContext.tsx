@@ -73,7 +73,7 @@ const LoginProvider = ({ children }: { children: ReactNode }) => {
 
 					return;
 				}
-				toast.error("Email não cadastro. Por favor criar uma conta");
+				toast.error("Email não cadastrado. Por favor criar uma conta");
 			}
 		},
 		[isCreateAccount, users]
